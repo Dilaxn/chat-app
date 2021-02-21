@@ -126,17 +126,22 @@ const ChatBox = (props) => {
   useEffect(scrollToBottom, [messages]);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (props.scope === "Global Chat") {
-      sendGlobalMessage(newMessage).then(() => {
-        setNewMessage("");
-      });
-    } else {
-      sendConversationMessage(props.user._id, newMessage).then((res) => {
-        setNewMessage("");
-      });
-    }
-  };
+  e.preventDefault();
+  if (props.scope === "Global Chat") {
+    sendGlobalMessage(newMessage).then(() => {
+      setNewMessage("");
+    });
+    getGlobalMessages().then((res) => {
+      setMessages(res);
+    });
+  } else {
+    sendConversationMessage(props.user._id, newMessage).then((res) => {
+      setNewMessage("");
+    });
+      getConversationMessages(props.user._id).then((res) => {setMessages(res)});
+  }
+
+};
 
   return (
     <Grid container className={classes.root}>
